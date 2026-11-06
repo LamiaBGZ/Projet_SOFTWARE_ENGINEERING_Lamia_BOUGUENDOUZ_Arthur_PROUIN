@@ -4,12 +4,13 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
-from data_loader import load_data
-from preprocessing import clean_data
+from src.data_loader import load_data
+from src.preprocessing import clean_data
 
 
 def predict_churn(customer: pd.DataFrame) -> int:
     """Prédit si un client risque de quitter l'opérateur."""
+
     project_root = Path(__file__).resolve().parent.parent
     model_path = project_root / "models" / "churn_model.joblib"
 

@@ -10,8 +10,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-from data_loader import load_data
-from preprocessing import clean_data
+from src.data_loader import load_data
+from src.preprocessing import clean_data
 
 
 def train_model() -> None:
