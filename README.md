@@ -8,7 +8,7 @@ L'objectif est de développer une application Python de Machine Learning permett
 
 Le projet vise également à appliquer les bonnes pratiques du génie logiciel : architecture modulaire, API REST, sécurité, tests automatisés, documentation, packaging et intégration continue.
 
-**État actuel :** première version fonctionnelle du modèle et de l'API. Le développement est toujours en cours.
+**État actuel :** première version fonctionnelle du modèle et de l'API, accompagnée de tests automatisés. La couverture de code atteint **85 %**, dépassant l'objectif minimum de 75 %. Le développement reste en cours.
 
 ## 2. Dataset
 
@@ -69,15 +69,63 @@ L'API utilise :
 - Un fichier `.env` pour la configuration locale ;
 - Swagger UI pour la documentation interactive.
 
-### Tests manuels déjà effectués
+### Vérifications réalisées
+
+Les vérifications manuelles suivantes ont été effectuées :
 
 - `GET /health` : réponse `200 OK`.
 - `POST /predict` avec une clé valide : réponse `200 OK`.
 - `POST /predict` sans clé : réponse `401 Unauthorized`.
 
-Ces vérifications sont manuelles. Les tests automatisés restent à développer.
+Ces comportements sont désormais également vérifiés par des tests automatisés.
 
-## 5. Structure actuelle du projet
+## 5. Tests automatisés et couverture
+
+Les tests automatisés ont été développés avec **Pytest** et la couverture a été mesurée avec **pytest-cov**.
+
+La suite comporte actuellement **15 tests**, tous réussis.
+
+### Fonctionnalités testées
+
+- **API :** fonctionnement de `/health`, refus des requêtes non autorisées et prédiction avec une clé valide.
+- **Chargement des données :** type de données retourné, présence des colonnes attendues et dimensions du dataset.
+- **Prétraitement :** suppression de l'identifiant, conversion numérique, encodage de la cible et traitement des valeurs manquantes.
+- **Entraînement :** exécution du pipeline et vérification de la sauvegarde à l'aide d'un mock.
+- **Prédiction :** vérification du type de retour et des prédictions binaires avec des modèles simulés.
+
+### Résultats de couverture
+
+| Module | Couverture |
+|---|---:|
+| `api.py` | 96 % |
+| `data_loader.py` | 67 % |
+| `predict.py` | 67 % |
+| `preprocessing.py` | 59 % |
+| `train.py` | 97 % |
+| **Couverture globale** | **85 %** |
+
+**Objectif du projet : couverture ≥ 75 %.**
+
+**Résultat actuel : 85 % — objectif atteint.**
+
+### Exécution des tests
+
+Depuis la racine du projet, dans un environnement Python où les dépendances sont installées :
+
+```bash
+python -m pytest tests/ --cov=src --cov-report=term-missing
+```
+
+Dernier résultat obtenu :
+
+```text
+15 passed in 4.07s
+TOTAL 135 statements, 20 missing, 85% coverage
+```
+
+La suite de tests continuera à être enrichie pendant le développement.
+
+## 6. Structure actuelle du projet
 
 ```text
 Projet_software_enginner/
@@ -94,15 +142,19 @@ Projet_software_enginner/
 │   ├── predict.py
 │   └── api.py
 ├── tests/
-│   └── test_data_loader.py
+│   ├── test_api.py
+│   ├── test_data_loader.py
+│   ├── test_predict.py
+│   ├── test_preprocessing.py
+│   └── test_train.py
 ├── .env
 ├── .gitignore
 └── README.md
 ```
 
-Le fichier `.env` contient des informations de configuration sensibles et ne doit pas être publié sur GitHub.
+Le fichier `.env` contient des informations de configuration sensibles et est exclu du dépôt Git grâce au fichier `.gitignore`.
 
-## 6. Technologies utilisées
+## 7. Technologies utilisées
 
 - Python
 - Pandas
@@ -112,8 +164,12 @@ Le fichier `.env` contient des informations de configuration sensibles et ne doi
 - Pydantic
 - Uvicorn
 - python-dotenv
+- Pytest
+- pytest-cov
+- HTTPX
+- unittest.mock
 
-## 7. État d'avancement
+## 8. État d'avancement
 
 | Fonctionnalité | Statut |
 |---|---|
@@ -124,32 +180,28 @@ Le fichier `.env` contient des informations de configuration sensibles et ne doi
 | Sauvegarde du modèle | Terminé |
 | Prédiction locale | Terminé |
 | API FastAPI `/health` et `/predict` | Terminé |
-| Authentification par clé API | Terminé — tests manuels |
-| Tests automatisés et couverture ≥ 75 % | À faire |
+| Authentification par clé API | Implémentée et testée |
+| Tests automatisés | 15 tests réussis |
+| Couverture de code ≥ 75 % | **Atteint : 85 %** |
 | Logging | À faire |
 | Packaging avec Poetry | À faire |
 | Documentation Sphinx | À faire |
-| Qualité du code et pre-commit | À faire |
+| Qualité du code avec Ruff et Black | À faire |
+| Hooks pre-commit | À faire |
 | CI GitHub Actions | À faire |
 
-## 8. Prochaines étapes
+## 9. Prochaines étapes
 
 Les prochaines étapes prévues sont :
 
-1. Développer les tests unitaires et d'intégration avec Pytest.
-2. Mesurer la couverture de code avec pytest-cov.
-3. Améliorer la validation des données et la gestion des erreurs.
-4. Ajouter les logs applicatifs.
-5. Préparer le packaging avec Poetry.
-6. Ajouter la documentation Sphinx.
-7. Configurer le linting et la CI GitHub Actions.
+1. Mettre en place Ruff et Black pour améliorer la qualité et le formatage du code.
+2. Configurer les hooks pre-commit.
+3. Ajouter les logs applicatifs et améliorer la gestion des erreurs.
+4. Préparer le packaging du projet avec Poetry.
+5. Développer la documentation Sphinx.
+6. Configurer l'intégration continue avec GitHub Actions.
+7. Compléter l'évaluation du modèle et enrichir les tests.
 
-## 9. Utilisation de l'intelligence artificielle
 
-ChatGPT a été utilisé comme outil d'assistance pour expliquer les concepts, proposer des exemples de code, accompagner le débogage et aider à structurer la documentation.
-
-Les fonctionnalités ont été exécutées et vérifiées progressivement dans l'environnement de développement. Les tests automatisés et la validation finale restent à réaliser.
-
----
 
 **Projet en cours de développement — M2 Software Engineering for Data.**
